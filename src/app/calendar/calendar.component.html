@@ -1,0 +1,188 @@
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-4">
+            <h1>Instructors</h1>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th scope="col">Name</th>
+                        <th scope="col">LastName</th>
+                        <th scope="col">BirthDate</th>
+                        <th scope="col">Events Duration</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let instructor of instructors">
+                        <th scope="row">{{instructor.name}}</th>
+                        <td>{{instructor.lastName}}</td>
+                        <td>{{instructor.birthDate | date:'MM/dd/yyyy'}}</td>
+                        <td>{{instructor.duration}}</td>
+                    </tr>
+                </tbody>
+            </table>
+            <div>
+                <button type="button" class="btn btn-primary" aria-label="Create"  (click)="open(createInstructor)">
+                    Create Instructor 
+                </button>
+            </div>
+        </div>
+        <div class="col-8">
+            <full-calendar #calendar [options]="calendarOptions"></full-calendar>
+        </div>
+    </div>
+</div>
+
+
+<ng-template #content let-modal>
+    <div class="modal-header">
+        <h4 class="modal-title" id="modal-create-event">Create Event</h4>
+        <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <form [formGroup]="createEventForm" (ngSubmit)="onSubmit()">
+            <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                    <label class="input-group-text" for="inputGroupSelect01">Instructor</label>
+                </div>
+                <select for="instructor" class="custom-select" id="inputGroupSelect01" formControlName="instructor">
+                    <option *ngFor="let instructor of instructors" value="{{instructor.id}}">{{instructor.name}}
+                    </option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="startDate">Start Date</label>
+                <div class="input-group">
+                    <input id="startDate" class="form-control" placeholder="yyyy-mm-dd" name="startDate" ngbDatepicker
+                        #startDate="ngbDatepicker" formControlName="startDate">
+                    <div class="input-group-append">
+                        <button class="btn btn-outline-secondary calendar" (click)="startDate.toggle()"
+                            type="button"></button>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="endDate">End Date</label>
+                <div class="input-group">
+                    <input id="endDate" class="form-control" placeholder="yyyy-mm-dd" name="endDate" ngbDatepicker
+                        #endDate="ngbDatepicker" formControlName="endDate">
+                    <div class="input-group-append">
+                        <button class="btn btn-outline-secondary calendar" (click)="endDate.toggle()"
+                            type="button"></button>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label>Description</label>
+                <div class="input-group">
+                    <input id="description" class="form-control" placeholder="1 Week off" name="description"
+                        formControlName="description">
+                </div>
+            </div>
+            <div>
+                <button type="submit" class="btn btn-outline-dark" (click)="modal.close('Save click')">Save</button>
+            </div>
+        </form>
+    </div>
+</ng-template>
+
+
+
+<ng-template #updateEvent let-modal>
+    <div class="modal-header">
+        <h4 class="modal-title" id="modal-create-event">Update Event</h4>
+        <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <form [formGroup]="updateEventForm" (ngSubmit)="onSubmitUpdateEvent()">
+            <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                    <label class="input-group-text" for="inputGroupSelect01">Instructor</label>
+                </div>
+                <h3>{{calendarEvent.instructor.name}}</h3>
+            </div>
+            <div class="form-group">
+                <label for="startDate">Start Date</label>
+                <div class="input-group">
+                    <input id="startDate" class="form-control" name="startDate" ngbDatepicker
+                        placeholder="{{calendarEvent.startDate |  date:'yyyy-MM-dd' }}" #startDate="ngbDatepicker"
+                        formControlName="startDate">
+                    <div class="input-group-append">
+                        <button class="btn btn-outline-secondary calendar" (click)="startDate.toggle()"
+                            type="button"></button>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="endDate">End Date</label>
+                <div class="input-group">
+                    <input id="endDate" class="form-control" ngbDatepicker
+                        placeholder="{{calendarEvent.endDate |  date:'yyyy-MM-dd' }}" name="endDate" ngbDatepicker
+                        #endDate="ngbDatepicker" formControlName="endDate">
+                    <div class="input-group-append">
+                        <button class="btn btn-outline-secondary calendar" (click)="endDate.toggle()"
+                            type="button"></button>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label>Description</label>
+                <div class="input-group">
+                    <input id="description" class="form-control" placeholder="{{calendarEvent.description}}"
+                        name="description" formControlName="description">
+                </div>
+            </div>
+            <div>
+                <button type="submit" class="btn btn-outline-dark" (click)="modal.close('Save click')">Update</button>
+                <button type="button" class="btn btn-warning" (click)="deleteEvent()">Delete</button>
+            </div>
+        </form>
+    </div>
+</ng-template>
+
+
+
+<ng-template #createInstructor let-modal>
+    <div class="modal-header">
+        <h4 class="modal-title" id="modal-create-event">Create Instructor</h4>
+        <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <form [formGroup]="createInstructorForm" (ngSubmit)="onSubmitcreateInstructor()">
+            <div class="form-group">
+                <label>Name</label>
+                <div class="input-group">
+                    <input id="name" class="form-control" placeholder="Name"
+                        name="name" formControlName="name">
+                </div>
+            </div>
+            <div class="form-group">
+                <label>LastName</label>
+                <div class="input-group">
+                    <input id="LastName" class="form-control" placeholder="LastName"
+                        name="LastName" formControlName="LastName">
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="endDate">BirthDate</label>
+                <div class="input-group">
+                    <input id="endDate" class="form-control" ngbDatepicker
+                        placeholder="yyyy-MM-dd" name="BirthDate" ngbDatepicker
+                        #endDate="ngbDatepicker" formControlName="BirthDate">
+                    <div class="input-group-append">
+                        <button class="btn btn-outline-secondary calendar" (click)="endDate.toggle()"
+                            type="button"></button>
+                    </div>
+                </div>
+            </div>
+            <div>
+                <button type="submit" class="btn btn-outline-dark" (click)="modal.close('Save click')">Create</button>
+            </div>
+        </form>
+    </div>
+</ng-template>
