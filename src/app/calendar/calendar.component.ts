@@ -47,6 +47,7 @@ export class CalendarComponent implements OnInit {
   createEventForm = this.formBuilder.group({
     description: '',
     startDate: '',
+    eventType:'',
     instructor: '',
     endDate: ''
   });
@@ -55,6 +56,7 @@ export class CalendarComponent implements OnInit {
   updateEventForm = this.formBuilder.group({
     description: '',
     startDate: '',
+    eventType:'',
     instructor: '',
     endDate: ''
   });
@@ -100,7 +102,7 @@ export class CalendarComponent implements OnInit {
         insturtor.color = this.getRandomColor();
         var events: CalendarEvent[] = insturtor.events;
         events.forEach(evento => {
-          calendarEvent.push({ title: evento.description, start: evento.startDate, end: evento.endDate, backgroundColor: insturtor.color, id: evento.id });
+          calendarEvent.push({ title: evento.description+": " + insturtor.name+" "+insturtor.lastName, start: evento.startDate, end: evento.endDate, backgroundColor: insturtor.color, id: evento.id });
         })
       }
       );
@@ -143,6 +145,7 @@ export class CalendarComponent implements OnInit {
     let eventPost = {} as CalendarEvent;
     let InstructorPost = {} as Instructor;
     eventPost.description = this.createEventForm.value["description"];
+    eventPost.eventType = this.createEventForm.value["eventType"];
     var monthStartDate = this.createEventForm.value["startDate"]["month"] + '';
     var dayStartDate = this.createEventForm.value["startDate"]["day"] + '';
     var monthEndtDate = this.createEventForm.value["endDate"]["month"] + '';
@@ -167,7 +170,7 @@ export class CalendarComponent implements OnInit {
 
   onSubmitUpdateEvent(): void{
     console.log('the even has been updated', this.updateEventForm.value);
-    if(this.updateEventForm.value["description"]!='' || this.updateEventForm.value["startDate"]!='' || this.updateEventForm.value["endDate"]!=''){
+    if(this.updateEventForm.value["description"]!='' || this.updateEventForm.value["startDate"]!='' || this.updateEventForm.value["endDate"]!='' || this.updateEventForm.value["eventType"]!=''){
       let eventPost = {} as CalendarEvent;
       let InstructorPost = {} as Instructor;
       if(this.updateEventForm.value["description"]!=''){
@@ -175,6 +178,12 @@ export class CalendarComponent implements OnInit {
         eventPost.description = this.updateEventForm.value["description"];
       }else{
         eventPost.description = this.calendarEvent.description;
+      }
+      if(this.updateEventForm.value["eventType"]!=''){
+        console.log("descripcion no es vacia");
+        eventPost.eventType = this.updateEventForm.value["eventType"];
+      }else{
+        eventPost.eventType = this.calendarEvent.eventType;
       }
       if(this.updateEventForm.value["startDate"]!=''){
         console.log("startDate no es vacia");
@@ -203,9 +212,7 @@ export class CalendarComponent implements OnInit {
             colorEvent = instructor.color;
           }
         });
-        console.log("id creada: " + idEvent);
-        let calendarApi = this.calendarComponent.getApi();
-        calendarApi.addEvent({ title: eventPost.description, start: eventPost.startDate, end: eventPost.endDate, backgroundColor: colorEvent, id: idEvent + '' });
+        this.getInstructors();
       });;
 
       this.updateEventForm.reset();

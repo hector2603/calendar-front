@@ -6,4 +6,5 @@ export interface CalendarEvent {
     endDate:string;
     description:string;
     instructor:Instructor;
+    eventType:string;
 }

@@ -47,7 +47,7 @@
                     <label class="input-group-text" for="inputGroupSelect01">Instructor</label>
                 </div>
                 <select for="instructor" class="custom-select" id="inputGroupSelect01" formControlName="instructor">
-                    <option *ngFor="let instructor of instructors" value="{{instructor.id}}">{{instructor.name}}
+                    <option *ngFor="let instructor of instructors" value="{{instructor.id}}">{{instructor.name}} {{instructor.lastName}}
                     </option>
                 </select>
             </div>
@@ -71,6 +71,13 @@
                         <button class="btn btn-outline-secondary calendar" (click)="endDate.toggle()"
                             type="button"></button>
                     </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label>Event Type</label>
+                <div class="input-group">
+                    <input id="eventType" class="form-control" placeholder="meet"
+                        name="eventType" formControlName="eventType">
                 </div>
             </div>
             <div class="form-group">
@@ -102,7 +109,7 @@
                 <div class="input-group-prepend">
                     <label class="input-group-text" for="inputGroupSelect01">Instructor</label>
                 </div>
-                <h3>{{calendarEvent.instructor.name}}</h3>
+                <h3>{{calendarEvent.instructor.name}} {{calendarEvent.instructor.lastName}}</h3>
             </div>
             <div class="form-group">
                 <label for="startDate">Start Date</label>
@@ -126,6 +133,13 @@
                         <button class="btn btn-outline-secondary calendar" (click)="endDate.toggle()"
                             type="button"></button>
                     </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label>Event Type</label>
+                <div class="input-group">
+                    <input id="eventType" class="form-control" placeholder="{{calendarEvent.eventType}}"
+                        name="eventType" formControlName="eventType">
                 </div>
             </div>
             <div class="form-group">
